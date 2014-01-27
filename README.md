@@ -6,8 +6,8 @@ Currently under Construction!!
 :TEMPORARY:
 Algorithm works like this: (pseudo code)
 
-Seed = HashCode(Password)
-SeedRandomGenerator(Seed)
-Data[] = readFileToEnd(inputfile)
-OutputData[] = AllocateMemory(inputfile.size)
-for (index++) OutputData[index] = Data[index] xor GetRandomNumber()
+Seed = HashCode(Password)<br >
+SeedRandomGenerator(Seed)<br>
+Data[] = readFileToEnd(inputfile)<br>
+OutputData[] = AllocateMemory(inputfile.size)<br>
+for (index++) OutputData[index] = Data[index] xor GetRandomNumber()<br>
