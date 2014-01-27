@@ -3,7 +3,7 @@ RXE - Random XOR Encryption
 
 Currently under Construction!!
 
-:TEMPORARY:
+:TEMPORARY:<br>
 Algorithm works like this: (pseudo code)
 
 Seed = HashCode(Password)<br >
