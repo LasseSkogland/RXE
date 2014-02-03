@@ -4,6 +4,7 @@
 
 #define println(MSG) printf("%s\n", MSG)
 long seed = 0L;
+int verbose = 0;
 int BUFFER_SIZE = 8196;
 
 long unsigned int RXE_rand() {
@@ -30,11 +31,45 @@ void RXE_Init(char *key) {
 	}
 }
 
+void RXE_Main(FILE *in, FILE *out, char *pass) {
+	RXE_Init(pass);
+	int size;
+	fseek(in, 0L, SEEK_END);
+	size = ftell(in);
+	rewind(in);
+	int itmp = 0, otmp = 0;
+	char *outdata, *indata = calloc(BUFFER_SIZE, sizeof(char));
+	outdata = calloc(BUFFER_SIZE, sizeof(char));
+	while(size > 0) {
+		if (size >= BUFFER_SIZE) {
+			itmp = fread(indata, sizeof(char), BUFFER_SIZE, in);
+			if(verbose > 0) printf("R/W: %i/", itmp);
+			RXE_Crypt(indata, outdata, BUFFER_SIZE);
+			otmp = fwrite(outdata, sizeof(char), BUFFER_SIZE, out);
+			if(verbose > 0) printf("%i\n", otmp);
+			size -= BUFFER_SIZE;
+		} else {
+			itmp = fread(indata, sizeof(char), size, in);
+			if(verbose > 0) printf("R/W: %i/", itmp);
+			RXE_Crypt(indata, outdata, size);
+			otmp = fwrite(outdata, sizeof(char), size, out);
+			if(verbose > 0) printf("%i\n", otmp);
+			size = 0;
+		}
+			
+	}
+}
+
+
+/*
+ * All code below is "unimportant", it's only argument handling and file opening/closing
+ */
 void main(int argc, char *argv[]){
+	struct arg_lit *v = arg_lit0("v", "verbose", "Print debug");
 	struct arg_file *ifile = arg_file1("i", "input-file", "INPUT_FILE", "Set Input File");
 	struct arg_file *ofile = arg_file0("o", "output-file", "OUTPUT_FILE", "Set Output File");
-	struct arg_str *pass = arg_str0("p", "password", "PASSWORD","Set Encryption Password");
-	struct arg_int *buf = arg_int0("b", "buffer-size", "BUFFER_SIZE","Set Buffer Size");
+	struct arg_str *pass = arg_str0("p", "password", "PASSWORD", "Set Encryption Password");
+	struct arg_int *buf = arg_int0("b", "buffer-size", "BUFFER_SIZE", "Set Buffer Size");
 	struct arg_end *end = arg_end(20);
 	void *argtable[] = {ifile, ofile, pass, buf, end};
 	int nerrors = arg_parse(argc, argv, argtable);
@@ -45,8 +80,7 @@ void main(int argc, char *argv[]){
 		arg_print_syntax(stdout, argtable, "\n");
 		arg_print_glossary(stdout, argtable, "  %-10s %s\n");
 	} else {
-		if(pass->count > 0) RXE_Init((char *)pass->sval[0]);
-		else RXE_Init("DEFAULT");
+		verbose = v->count;
 		if (buf->count > 0) {
 			BUFFER_SIZE = buf->ival[0];
 		}
@@ -58,31 +92,8 @@ void main(int argc, char *argv[]){
 			__builtin_strcat(farr, ".rxe");
 			outfile = fopen(farr, "wb");
 		}
-		int size;
-		fseek(infile, 0L, SEEK_END);
-		size = ftell(infile);
-		rewind(infile);
-		int itmp = 0, otmp = 0;
-		char *outdata, *indata = calloc(BUFFER_SIZE, sizeof(char));
-		outdata = calloc(BUFFER_SIZE, sizeof(char));
-		while(size > 0) {
-			if (size >= BUFFER_SIZE) {
-				itmp = fread(indata, sizeof(char), BUFFER_SIZE, infile);
-				printf("R/W: %i/", itmp);
-				RXE_Crypt(indata, outdata, BUFFER_SIZE);
-				otmp = fwrite(outdata, sizeof(char), BUFFER_SIZE, outfile);
-				printf("%i\n", otmp);
-				size -= BUFFER_SIZE;
-			} else {
-				itmp = fread(indata, sizeof(char), size, infile);
-				printf("R/W: %i/", itmp);
-				RXE_Crypt(indata, outdata, size);
-				otmp = fwrite(outdata, sizeof(char), size, outfile);
-				printf("%i\n", otmp);
-				size = 0;
-			}
-			
-		}
+		if(pass->count > 0) RXE_Main(infile, outfile, (char *)pass->sval[0]);
+		else RXE_Main(infile, outfile, "DEFAULT");
 		fclose(outfile);
 		fclose(infile);
 	}
