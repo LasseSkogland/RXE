@@ -13,7 +13,7 @@ long unsigned int RXE_rand() {
 	
 	lo += (hi & 0x7FFF) << 16;
 	lo += hi >> 15;
-	if (lo > 0x7FFFFFF) lo -= 0x7FFFFFFF;
+	lo = (lo & 0x7FFFFFFF) + (lo >> 31);
 	return (seed = (long)lo);
 }
 
