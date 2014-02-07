@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "src/argtable2/argtable2.h"
+#include "argtable2/argtable2.h"
 
 #define println(MSG) printf("%s\n", MSG)
 long seed = 0L;
