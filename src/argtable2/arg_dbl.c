@@ -61,7 +61,7 @@ static int scanfn(struct arg_dbl *parent, const char *argval)
         char *end;
 
         /* extract double from argval into val */
-        val = strtod(argval,&end);
+        val = strtod(argval, &end);
 
         /* if success then store result in parent->dval[] array otherwise return error*/
         if (*end==0)

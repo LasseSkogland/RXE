@@ -164,6 +164,7 @@ static void errorfn(struct arg_file *parent, FILE *fp, int errorcode, const char
 
         default:
             fprintf(fp,"unknown error at \"%s\"\n",argval);
+            break;
         }
     }
 

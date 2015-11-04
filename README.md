@@ -1,5 +1,12 @@
 RXE - Random XOR Encryption
 ===
+
+<h5>Experimental Features:</h5>
+```
+
+```
+
+
 This is a file encryptor that uses XOR mixed with a PRNG.<br>
 This program is tested with 1GB files, and using MD5 to verify.<br>
 

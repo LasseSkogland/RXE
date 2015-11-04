@@ -28,7 +28,25 @@ USA.
 #ifdef __cplusplus
 extern "C" {
 #endif
+	//Define builtin GCC functions
+#ifdef __GNUC__
+#define free __builtin_free
+#define memset __builtin_memset
+#define malloc __builtin_malloc
+#define strcat __builtin_strcat
+#define strlen __builtin_strlen
+#define strstr __builtin_strstr
+#define strcpy __builtin_strcpy
+#define strchr __builtin_strchr
+#define strcmp __builtin_strcmp
+#define strcspn __builtin_strcspn
+#define strrchr __builtin_strrchr
+#define strncat __builtin_strncat
+#define isspace __builtin_isspace
+#define toupper __builtin_toupper
 
+
+#endif
 
 /* bit masks for arg_hdr.flag */
 enum
